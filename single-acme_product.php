@@ -11,11 +11,11 @@ get_header(); ?>
 		<main id="main" class="site-main" role="main">
 
 		<?php while ( have_posts() ) : the_post(); ?>
-
+			<?php my_extra_fields_update( $post_id ); ?>
+<?php $meta = get_post_meta( get_the_ID() ); ?>
+<?php get_post_meta(get_the_ID(), 'description', 1); ?>
 			<?php get_template_part( 'content', 'single' ); ?>
-
-
-	
+			
 
 
 
