@@ -247,9 +247,9 @@ function extra_fields_box_func( $post ){
 			<select name="extra[select]">
 			<?php $sel_v = get_post_meta($post->ID, 'select', 1); ?>
 			<option value="0">----</option>
-			<option value="1" <?php selected( $sel_v, '1' )?> >2017</option>
-			<option value="2" <?php selected( $sel_v, '2' )?> >2018</option>
-			<option value="3" <?php selected( $sel_v, '3' )?> >2019</option>
+			<option value="2017" <?php selected( $sel_v, '2017' )?> >2017</option>
+			<option value="2018" <?php selected( $sel_v, '2018' )?> >2018</option>
+			<option value="2019" <?php selected( $sel_v, '2019' )?> >2019</option>
 		</select> </p>
 
 	<input type="hidden" name="extra_fields_nonce" value="<?php echo wp_create_nonce(__FILE__); ?>" />
@@ -288,24 +288,7 @@ add_theme_support( 'post-thumbnails' );
 
 
 
-function insertFootNote($content) {
-if(!is_feed() && !is_home()) {
-		$tax = get_the_terms( $id, $taxonomy );
-		$content = $tax . $content;
 
-		
-	}
-
-
-
-        if(!is_feed() && !is_home()) {
-                
-		$content .= '<p>Date: ' . get_post_meta( $post->ID, $key, $value ) . '</p>';
-                
-        }
-        return $content;
-}
-add_filter ('the_content', 'insertFootNote');
 
 
 
@@ -333,12 +316,12 @@ foreach( $terms as $term ) {
      echo'<h5>' . $term->name . '</h5>';
      
     // вывод списком заголовков записей
-    echo '<ul>';
+    echo '<ul style="list-style-type:none">';
      
         // Начало цикла
         while ( $query->have_posts() ) : $query->the_post(); ?>
  
-        <li class="animal-listing" id="post-<?php the_ID(); ?>">
+        <li class="alert alert-info" role="alert" id="post-<?php the_ID(); ?>">
             <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
         </li>
          
@@ -361,3 +344,31 @@ function view_acme_func( $atts ){
 }
  
 add_shortcode( 'acme', 'view_acme_func' );
+
+function insertFilm($content) {
+$posts = get_posts( array(
+	'numberposts' => 5,
+	'category'    => 0,
+	'orderby'     => 'date',
+	'order'       => 'DESC',
+	'include'     => array(),
+	'exclude'     => array(),
+	'meta_key'    => '',
+	'meta_value'  =>'',
+	'post_type'   => 'post',
+	'suppress_filters' => true, // подавление работы фильтров изменения SQL запроса
+) );
+
+foreach( $posts as $post ){
+	setup_postdata($post);
+    // формат вывода the_title() ...
+}
+
+wp_reset_postdata(); // сброс
+}
+
+function view_acme_films( $atts ){
+	return insertFilm();
+}
+ 
+add_shortcode( 'acmefilm', 'view_acme_films' );
